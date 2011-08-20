@@ -6,6 +6,18 @@
  */
 class Post extends ActiveRecord
 {
+
+	/* HOOKS */
+	public function beforeValidate()
+	{
+		if( $this->isNewRecord )
+		{
+			$this->date_posted = date('Y-m-d H:i:s');
+		}
+		return parent::beforeValidate();
+	}
+
+	/* BASE */
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return Post the static model class
@@ -31,9 +43,8 @@ class Post extends ActiveRecord
 		return array(
 			array('title, body, date_posted', 'required'),
 			array('title', 'length', 'max'=>255),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, title, body', 'safe', 'on'=>'search'),
+			array('published','safe'),
+			array('id, title, body, published', 'safe', 'on'=>'search'),
 		);
 	}
 

@@ -36,6 +36,7 @@ Yii::import('application.modules.blog.models.PostTag');
  */
 class BlogModule extends CWebModule
 {
+	public $defaultController = 'Post';
 	/**
 	 * Initializes the blog module.
 	 */

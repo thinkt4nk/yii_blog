@@ -16,7 +16,7 @@ Class PostController extends Controller
 	public function accessRules()
 	{
 		return array(
-			'public' => array(
+			'admin' => array(
 				'create',
 				'edit',
 				'index',
@@ -110,10 +110,7 @@ Class PostController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Post');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
+		$this->redirect(array('admin'));
 	}
 
 	/**

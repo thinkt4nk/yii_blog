@@ -14,8 +14,10 @@ class Post extends ActiveRecord
 		{
 			$this->date_posted = date('Y-m-d H:i:s');
 		}
-		$this->body = str_replace("../../..//uploads","/uploads",$this->body);
-		$this->body = str_replace("../../../uploads","/uploads",$this->body);
+		// FUCK TINYMCE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!111111
+		$this->body = str_replace("..//","../",$this->body);
+		$this->body = str_replace("../","",$this->body);
+		$this->body = str_replace("uploads/","/uploads/",$this->body);
 		return parent::beforeValidate();
 	}
 

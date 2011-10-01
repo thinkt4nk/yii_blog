@@ -7,6 +7,29 @@
 class Post extends ActiveRecord
 {
 
+	/* GETTERS */
+	/**
+	 * Get the text from the body of the post
+	 */
+	public function getBodyText()
+	{
+		return preg_replace('/<.*?>/','',$this->body);
+	}
+	/**
+	 * Get the image data from the body of the post
+	 */
+	public function getImages()
+	{
+		$images = array();
+
+		preg_match_all('/<img.*?src=\".*?".*?>/',$this->body,$image_tags);
+		foreach ($image_tags[0] as $image_tag)
+		{
+			$images[] = preg_replace('/<img.*?src=\"(.*?)".*?>/','$1',$image_tag);
+		}
+		return $images;
+	}
+
 	/* HOOKS */
 	public function beforeValidate()
 	{

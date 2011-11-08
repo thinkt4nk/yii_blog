@@ -29,6 +29,59 @@ class Post extends ActiveRecord
 		}
 		return $images;
 	}
+	/**
+	 * Gets the published posts, grouped by year, month, day
+	 *
+	 * @return Array the arrangement of blog posts
+	 */
+	public static function getModelsArrangedByDate()
+	{
+		$ordered_posts = array();
+		$posts = self::model()->scopePublished()->orderByDate()->findAll();
+		foreach ($posts as $post)
+		{
+			$date_time = strtotime($post->date_posted);
+			$year = date('Y',$date_time);
+			$month = (int) date('m',$date_time);
+			if (!isset($ordered_posts[$year])) {
+				$ordered_posts[$year] = array();
+				if (!isset($ordered_posts[$year][$month])) {
+					$ordered_posts[$year][$month] = array();
+				}
+			}
+			$ordered_posts[$year][$month][] = $post;
+		}
+		return $ordered_posts;
+	}
+
+
+	/* SCOPES */
+	/**
+	 * Scopes only published posts
+	 *
+	 * @return Post the scoped post AR object
+	 */
+	public function scopePublished()
+	{
+		$merge_criteria = new CDbCriteria(array(
+			'condition' => 'published = 1'
+		));
+		$this->getDbCriteria()->mergeWith($merge_criteria);
+		return $this;
+	}
+	/**
+	 * Orders the posts by date, desc
+	 *
+	 * @return Post the ordered post AR object
+	 */
+	public function orderByDate($order = 'ASC')
+	{
+		$merge_criteria = new CDbCriteria(array(
+			'order' => sprintf('t.date_posted %s',$order)
+		));
+		$this->getDbCriteria()->mergeWith($merge_criteria);
+		return $this;
+	}
 
 	/* HOOKS */
 	public function beforeValidate()
